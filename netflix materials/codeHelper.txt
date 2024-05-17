@@ -1,0 +1,34 @@
+// Netflix logo
+https://res.cloudinary.com/ehizeex-shop/image/upload/v1668265433/NetflixApp/2560px-Netflix_2015_logo.svg_rbicwl_knwp6f.png
+
+
+//netflix background 
+https://res.cloudinary.com/ehizeex-shop/image/upload/v1668265236/NetflixApp/netflix-reuse-official_ntcjl2_wtrhhh.jpg
+
+
+//hero image 
+https://res.cloudinary.com/ehizeex-shop/image/upload/v1668267540/NetflixApp/avengers-age-of-ultron-team-together-poster-wallpaper-1600x600-92751_84_qvwbif.jpg
+
+//hero title background
+          background: -webkit-linear-gradient(#eee, rgb(128, 13, 13));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+
+
+// Movie trailer link 
+https://res.cloudinary.com/ehizeex-shop/video/upload/v1668377666/NetflixApp/Action_mlw9wx.mp4
+
+//card icons. 
+import { IoPlayCircleSharp } from "react-icons/io5";
+import { AiOutlinePlus } from "react-icons/ai";
+import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
+import { BiChevronDown } from "react-icons/bi";
+import { BsCheck } from "react-icons/bs";
+
+//movie poster
+https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaCor4AIV__zuNlgGZTSr424NdUudWBQKBrA&usqp=CAU
+
+//redux js toolkit 
+npm i react-redux @reduxjs/toolkit
+// axios installation 
+npm I axios
