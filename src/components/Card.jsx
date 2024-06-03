@@ -6,34 +6,30 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
 import { BiChevronDown } from "react-icons/bi";
 import { BsCheck } from "react-icons/bs";
+import ReactPlayer from 'react-player/youtube';
 
 export default React.memo(function Card({ movieData }) {
   const [onHovered, setOnHovered] = useState(false);
   const navigate = useNavigate();
+
+  console.log(movieData.image)
+
   return (
     <CardContainer
       onMouseEnter={() => setOnHovered(true)}
       onMouseLeave={() => setOnHovered(false)}
     >
       <img
-        src={`https://image.tmdb.org/t/p/w500${movieData.image}`}
+        src={movieData.image}
+        width={150}
+        height={150}
         alt="movie poster"
         onClick={() => navigate("/player")}
       />
       {onHovered && (
         <div className="hover">
           <div className="image-video-wrapper">
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movieData.image}`}
-              alt="movie poster"
-              onClick={() => navigate("/player")}
-            />
-            <video
-              src="https://res.cloudinary.com/ehizeex-shop/video/upload/v1668377666/NetflixApp/Action_mlw9wx.mp4"
-              autoPlay
-              loop
-              controls
-            />
+            <ReactPlayer url={movieData.trailer} playing={true} />
           </div>
           <div className="info-container">
             <h3 className="movieName" onClick={() => navigate("/player")}>
@@ -56,9 +52,7 @@ export default React.memo(function Card({ movieData }) {
             </div>
             <div className="genres">
               <ul>
-                {movieData.genres.map((genre) => {
-                  <li>{genre}</li>
-                })}
+                {movieData.category}
               </ul>
             </div>
           </div>

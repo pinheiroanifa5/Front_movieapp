@@ -1,24 +1,36 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Header from "../components/Header";
 import BackgroundImage from "../components/BackgroundImage";
 import styled from "styled-components";
+import { AuthContext } from "../components/Context";
+import axios from "axios";
 
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleLogin = () => {
-    //autenticação
-    if (email === "anytest@gmail.com" && password === "123") {
-      navigate("/");
-    } else {
-      alert("Email ou Palavra-Passe invalido");
-    }
-  };
   const navigate = useNavigate()
+
+  const { signIn } = useContext(AuthContext)
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/auth/signin', { email, password })
+      const token = response.data.access_token
+      //autenticação
+      signIn(token)
+      navigate("/")
+    } catch (error) {
+      if (error.response) {
+        alert("Email ou Palavra-Passe invalido");
+        const { message: errorMessage } = error.response.data
+        console.log({ errorMessage })
+      }
+    }
+
+  };
 
   return (
     <Wrapper>

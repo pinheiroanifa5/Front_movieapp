@@ -3,26 +3,23 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import TopNav from "../components/TopNav";
-import { fetchMovies, getGenres } from "../store";
 import SliderContainer from "../components/SliderContainer";
+import { getAllMovies } from "../store/reducers/NetflixSlice";
 
 const Netflix = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const navigate = useNavigate();
   const movies = useSelector((state) => state.netflix.movies);
-  const genresLoaded = useSelector((state) => state.netflix.genresLoaded);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getGenres());
-  }, [dispatch]);
+  const token = localStorage.getItem("token")
 
   useEffect(() => {
-    if (genresLoaded) {
-      dispatch(fetchMovies({ type: "all" }));
+    if (token) {
+      dispatch(getAllMovies(token))
     }
-  }, [genresLoaded, dispatch]);
+  }, [token, dispatch]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,6 +30,8 @@ const Netflix = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  console.log({ movies })
 
   return (
     <HeroContainer>
