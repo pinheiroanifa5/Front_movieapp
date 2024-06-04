@@ -18,6 +18,10 @@ const NetflixSlice = createSlice({
         getAllMovies: (state, action) => {
             const movies = action.payload
             state.movies = movies
+        },
+        addNewMovie: (state, action) => {
+            const newMovie = action.payload
+            state.movies = [...state.movies, newMovie]
         }
     },
 });
@@ -42,5 +46,30 @@ export const getAllMovies = (token, name = "") => {
 
     }
 }
+
+export const addMovie = (token, data, setMessage, setErrorDetails) => {
+    return async (dispatch) => {
+        try {
+            const response = await api.post('movies', data, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            dispatch(NetflixSlice.actions.addNewMovie(response.data))
+
+            return true
+        } catch (error) {
+            if (error.response) {
+                const { message: errorMessage, statusCode } = error.response.data
+                setMessage('An error occurred. Please try again.');
+                setErrorDetails(errorMessage);
+                console.log({ errorMessage, statusCode })
+            }
+            return false
+        }
+    }
+}
+
 
 export default NetflixSlice.reducer

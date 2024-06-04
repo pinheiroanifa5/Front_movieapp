@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import BackgroundImage from '../components/BackgroundImage';
 import Header from '../components/Header';
+import { AuthContext } from '../components/Context';
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,13 +11,21 @@ const SignUpPage = () => {
 
   const navigate = useNavigate();
 
+  const { } = useContext(AuthContext)
+
   const handleButtonClick = () => {
     setShowPassword(true);
   };
 
-  const handleSignIn = () => {
+  const handleSignUp = async () => {
+    const userInfo = {
+      ...formValues
+    }
+    const response = await axios.post('http://localhost:5000/auth/signup', userInfo)
+    const token = response.data
+
     // lógica de autenticação 
-    navigate('/dashboard');
+
   };
 
   return (
@@ -48,7 +57,7 @@ const SignUpPage = () => {
             )}
             {!showPassword ? (
               <button onClick={() => setShowPassword(true)}>Get Started</button>
-            ) : <button onClick={handleSignIn}>Sign Up</button>
+            ) : <button onClick={handleSignUp}>Sign Up</button>
             }
 
           </div>

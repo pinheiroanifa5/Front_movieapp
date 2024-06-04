@@ -1,39 +1,54 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addMovie } from '../store/reducers/NetflixSlice';
+
+
 
 const AddMovie = () => {
+  const dispatch = useDispatch()
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [trailerUrl, setTrailerUrl] = useState('');
   const [directorName, setDirectorName] = useState('');
   const [yearReleased, setYearReleased] = useState('');
   const [image, setImage] = useState('');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState('ACTION');
   const [message, setMessage] = useState('');
+  const [errorDetails, setErrorDetails] = useState('');
+
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token")
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    try {
-      const response = await axios.post('/api/movies', {
-        title,
-        description,
-        trailerUrl,
-        directorName,
-        yearReleased,
-        image,
-        category,
-      });
-
-      if (response.status === 201) {
-        setMessage('Movie added successfully!');
-      } else {
-        setMessage('Failed to add movie.');
-      }
-    } catch (error) {
-      setMessage('An error occurred. Please try again.');
+    const data = {
+      movieName: title,
+      description,
+      trailerUrl,
+      directorName,
+      yearReleased: Number(yearReleased),
+      image,
+      category
     }
+    dispatch(addMovie(token, data, setMessage, setErrorDetails)).then((Success) => {
+      if (Success) {
+        setMessage('Movie added successfully!');
+        setTitle('');
+        setDescription('');
+        setTrailerUrl('');
+        setDirectorName('');
+        setYearReleased('');
+        setImage('');
+        setCategory('ACTION');
+        setErrorDetails('');
+        // Redirecionar para a página 
+        navigate('/');
+      }
+    })
+
   };
 
   return (
@@ -79,7 +94,8 @@ const AddMovie = () => {
           Year Released:
           <input
             type="number"
-            min="0"
+            min="1888"
+            max={new Date().getFullYear()}
             value={yearReleased}
             onChange={(e) => setYearReleased(e.target.value)}
             required
@@ -101,15 +117,15 @@ const AddMovie = () => {
             onChange={(e) => setCategory(e.target.value)}
             required
           >
-            <option value="">Select Category</option>
-            <option value="ACTION">Action</option>
-            <option value="DRAMA">Drama</option>
-            <option value="TERROR">Terror</option>
-            <option value="ROMANCE">Romance</option>
+            <option value="ACTION">ACTION</option>
+            <option value="DRAMA">DRAMA</option>
+            <option value="TERROR">TERROR</option>
+            <option value="ROMANCE">ROMANCE</option>
           </select>
         </label>
         <button type="submit">Add Movie</button>
         {message && <p>{message}</p>}
+        {errorDetails && <p className="error-details">{errorDetails}</p>}
       </form>
     </FormContainer>
   );
@@ -172,6 +188,10 @@ const FormContainer = styled.div`
       color: #0f0;
       margin-top: 1rem;
       text-align: center;
+
+      &.error-details {
+        color: #f00;
+      }
     }
   }
 `;
