@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineLogout, AiOutlineSearch } from "react-icons/ai";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { getAllMovies } from "../store/reducers/NetflixSlice";
+import { AuthContext } from "./Context";
 
 const TopNav = ({ isScrolled }) => {
   const token = localStorage.getItem("token");
@@ -21,8 +22,12 @@ const TopNav = ({ isScrolled }) => {
   ];
 
   const navigate = useNavigate();
-  const SignOut = () => {
+
+  const { signOut } = useContext(AuthContext)
+
+  const handleSignOut = () => {
     console.log("Até a próxima!");
+    signOut()
     navigate('/login');
   };
 
@@ -70,7 +75,7 @@ const TopNav = ({ isScrolled }) => {
         </div>
 
         <div className="rightSide">
-          <button onClick={SignOut}>
+          <button onClick={handleSignOut}>
             <AiOutlineLogout />
           </button>
         </div>

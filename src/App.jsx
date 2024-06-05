@@ -25,13 +25,13 @@ function App() {
           userToken: action.token,
           loading: false
         }
-      case "LOGIN":
+      case "signIn":
         return {
           ...prevState,
           userToken: action.token,
           loading: false
         }
-      case "REMOVE_TOKEN":
+      case "signOut":
         return {
           ...prevState,
           userToken: null,
@@ -47,19 +47,20 @@ function App() {
 
   const authContext = useMemo(() => ({
     signIn: (token) => {
-      dispatch({ type: "LOGIN", token })
+      dispatch({ type: "signIn", token })
       localStorage.setItem("token", token)
     },
     signUp: (token) => { },
     signOut: () => {
-      dispatch({ type: "REMOVE_TOKEN" })
+      dispatch({ type: "signOut" })
       localStorage.removeItem("token")
     }
   }), [])
 
   useEffect(() => {
+    let localStorageToken = null
 
-    const localStorageToken = localStorage.getItem("token")
+    localStorageToken = localStorage.getItem("token")
 
     dispatch({ type: "RETRIVE_TOKEN", token: localStorageToken })
 
@@ -69,9 +70,6 @@ function App() {
   if (loginState.loading) {
     return (<div>loading...</div>)
   }
-
-  console.log({ token: loginState.userToken })
-
 
   return (
     <AuthContext.Provider value={authContext}>

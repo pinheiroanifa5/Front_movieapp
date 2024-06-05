@@ -4,29 +4,39 @@ import { useNavigate } from 'react-router-dom';
 import BackgroundImage from '../components/BackgroundImage';
 import Header from '../components/Header';
 import { AuthContext } from '../components/Context';
+import axios from 'axios';
 
 const SignUpPage = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [formValues, setFormValues] = useState({ email: "", password: "" });
+  const [showEmail, setShowEmail] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
+  const [showName, setShowName] = useState(true);
+  const [formValues, setFormValues] = useState({ email: "", password: "", name: "" });
 
   const navigate = useNavigate();
 
-  const { } = useContext(AuthContext)
-
-  const handleButtonClick = () => {
-    setShowPassword(true);
-  };
+  const { signUp } = useContext(AuthContext)
 
   const handleSignUp = async () => {
     const userInfo = {
       ...formValues
     }
-    const response = await axios.post('http://localhost:5000/auth/signup', userInfo)
-    const token = response.data
-
-    // lógica de autenticação 
-
+    try {
+      const response = await axios.post('http://localhost:5000/auth/signup', userInfo)
+      const token = response.data
+      if (token) {
+        signUp(token)
+        navigate("/login")
+      }
+    } catch (error) {
+      if (error.response) {
+        const { message: errorMessage } = error.response.data
+        console.log({ errorMessage })
+      }
+    }
   };
+
+
+  console.log({ showPassword })
 
   return (
     <Container>
@@ -40,25 +50,45 @@ const SignUpPage = () => {
             <h6>Estas pronto? Entre com o teu email para criar ou reativar a tua assinatura.</h6>
           </div>
           <div className="form">
-            {showPassword ? (
-              <input type="password"
-                placeholder="Password"
-                name="password"
-                value={formValues.password}
-                onChange={(e) => setFormValues({ ...formValues, [e.target.name]: e.target.value })}
-              />
-            ) : (
+            {showEmail ? (
               <input type="email"
                 placeholder="Email address"
                 name="email"
                 value={formValues.email}
                 onChange={(e) => setFormValues({ ...formValues, [e.target.name]: e.target.value })}
               />
+
+            ) : showName ? (
+              <input type="name"
+                placeholder="Name"
+                name="name"
+                value={formValues.name}
+                onChange={(e) => setFormValues({ ...formValues, [e.target.name]: e.target.value })}
+              />
+            ) : (
+              <input type="password"
+                placeholder="Password"
+                name="password"
+                value={formValues.password}
+                onChange={(e) => setFormValues({ ...formValues, [e.target.name]: e.target.value })}
+              />
             )}
-            {!showPassword ? (
-              <button onClick={() => setShowPassword(true)}>Get Started</button>
-            ) : <button onClick={handleSignUp}>Sign Up</button>
+            {showName ? (
+              <button onClick={() => {
+                setShowEmail(true)
+                setShowName(false)
+              }}>Next</button>
+            ) : showEmail ? (
+              <button onClick={() => {
+                setShowEmail(false)
+                setShowName(false)
+              }}>Next</button>
+            ) : (
+              <button onClick={handleSignUp}>Sign Up</button>
+            )
             }
+
+
 
           </div>
         </div>

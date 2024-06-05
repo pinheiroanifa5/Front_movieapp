@@ -5,19 +5,23 @@ import { useDispatch, useSelector } from "react-redux";
 import TopNav from "../components/TopNav";
 import SliderContainer from "../components/SliderContainer";
 import { getAllMovies } from "../store/reducers/NetflixSlice";
+import { getMe } from "../store/reducers/usersSlice";
 
 const Netflix = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const navigate = useNavigate();
   const movies = useSelector((state) => state.netflix.movies);
+  const myinfo = useSelector((state) => state.users.myinfo)
   const dispatch = useDispatch();
+
+  console.log({ myinfo })
 
   const token = localStorage.getItem("token")
 
   useEffect(() => {
     if (token) {
-      dispatch(getAllMovies(token))
+      dispatch(getAllMovies(token)).then(() => dispatch(getMe(token)))
     }
   }, [token, dispatch]);
 
@@ -30,8 +34,6 @@ const Netflix = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  console.log({ movies })
 
   return (
     <HeroContainer>
