@@ -27,7 +27,7 @@ const AddMovie = () => {
     const data = {
       movieName: title,
       description,
-      trailerUrl,
+      trailer: trailerUrl,
       directorName,
       yearReleased: Number(yearReleased),
       image,
@@ -44,7 +44,7 @@ const AddMovie = () => {
         setImage('');
         setCategory('ACTION');
         setErrorDetails('');
-        // Redirecionar para a página 
+        // voltar
         navigate('/');
       }
     })
@@ -119,8 +119,13 @@ const AddMovie = () => {
           >
             <option value="ACTION">ACTION</option>
             <option value="DRAMA">DRAMA</option>
-            <option value="TERROR">TERROR</option>
+            <option value="HORROR">HORROR</option>
             <option value="ROMANCE">ROMANCE</option>
+            <option value="COMEDY">COMEDY</option>
+            <option value="ROMANCE">ROMANCE</option>
+            <option value="DOCUMENTARY">DOCUMENTARY</option>
+            <option value="SUPERHERO">SUPERHERO</option>
+            <option value="FANTASY">FANTASY</option>
           </select>
         </label>
         <button type="submit">Add Movie</button>

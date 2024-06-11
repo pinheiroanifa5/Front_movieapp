@@ -2,26 +2,27 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import TopNav from "../components/TopNav";
 import SliderContainer from "../components/SliderContainer";
 import { getAllMovies } from "../store/reducers/NetflixSlice";
-import { getMe } from "../store/reducers/usersSlice";
+import { getMe } from "../store/reducers/UsersSlice";
+import ReactPlayer from "react-player";
 
 const Netflix = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const navigate = useNavigate();
   const movies = useSelector((state) => state.netflix.movies);
-  const myinfo = useSelector((state) => state.users.myinfo)
   const dispatch = useDispatch();
 
-  console.log({ myinfo })
-
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (token) {
-      dispatch(getAllMovies(token)).then(() => dispatch(getMe(token)))
+      dispatch(getAllMovies(token)).then(() => dispatch(getMe(token)));
     }
   }, [token, dispatch]);
 
@@ -35,29 +36,41 @@ const Netflix = () => {
     };
   }, []);
 
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+  };
+
   return (
     <HeroContainer>
       <div className="hero">
         <TopNav isScrolled={isScrolled} />
-        <img
-          className="background-image"
-          src="https://res.cloudinary.com/ehizeex-shop/image/upload/v1668267540/NetflixApp/avengers-age-of-ultron-team-together-poster-wallpaper-1600x600-92751_84_qvwbif.jpg"
-          alt="hero image"
-        />
-        <div className="container">
-          <div className="title">
-            <h1>Super man</h1>
-            <p>Descricao..</p>
-          </div>
-          <div className="buttons">
-            <button onClick={() => navigate("/player")} className="playBtn">
-              Play
-            </button>
-            <button onClick={() => navigate("/details")} className="moreBtn">
-              More
-            </button>
-          </div>
-        </div>
+        <Slider {...settings}>
+          {movies.map((movie, index) => (
+            <div key={index} className="slide">
+              < ReactPlayer url={movies[Math.floor(Math.random() * movies.length)].trailer} playing={true} width="100%" />
+              <div className="container">
+                <div className="title">
+                  <h1>{movie.title}</h1>
+                  <p>{movie.description}</p>
+                </div>
+                <div className="buttons">
+                  <button onClick={() => navigate("/player")} className="playBtn">
+                    Play
+                  </button>
+                  <button onClick={() => navigate("/details")} className="moreBtn">
+                    More
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </Slider>
       </div>
       <SliderContainer movies={movies} />
     </HeroContainer>
@@ -68,15 +81,18 @@ const HeroContainer = styled.div`
   .hero {
     position: relative;
     .background-image {
-      filter: brightness(40%);
-    }
-    img {
-      height: 70vh;
+      filter: brightness(100%);
+      height: 100vh;
       width: 100%;
+      object-fit: cover;
+      
     }
     .container {
       position: absolute;
       bottom: 1rem;
+      
+      
+    
       .title {
         h1 {
           margin-left: 5rem;
@@ -88,7 +104,7 @@ const HeroContainer = styled.div`
         }
         p {
           margin-bottom: -50px;
-          width: 640px;
+          width: 80%;
           margin-left: 5rem;
           font-family: "lexend Deca", sans-serif;
           color: #ad9292;
@@ -128,6 +144,7 @@ const HeroContainer = styled.div`
         border: 0.1rem solid white;
         cursor: pointer;
       }
+      
     }
   }
 `;

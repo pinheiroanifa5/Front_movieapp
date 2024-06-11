@@ -12,7 +12,6 @@ export default React.memo(function Card({ movieData }) {
   const [onHovered, setOnHovered] = useState(false);
   const navigate = useNavigate();
 
-  console.log(movieData.image)
 
   return (
     <CardContainer

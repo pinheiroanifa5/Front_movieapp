@@ -6,7 +6,7 @@ import {
 
 
 import NetflixSlice from "./reducers/NetflixSlice";
-import usersSlice from "./reducers/usersSlice";
+import usersSlice from "./reducers/UsersSlice";
 
 export const store = configureStore({
     reducer: {

@@ -2,15 +2,18 @@ import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineLogout, AiOutlineSearch } from "react-icons/ai";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAllMovies } from "../store/reducers/NetflixSlice";
+import { getMe } from "../store/reducers/UsersSlice";
 import { AuthContext } from "./Context";
 
 const TopNav = ({ isScrolled }) => {
   const token = localStorage.getItem("token");
   const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.users.myinfo);
+  const { signOut: signOutContext } = useContext(AuthContext);
 
   const navlinks = [
     { name: "Home", link: "/" },
@@ -20,14 +23,11 @@ const TopNav = ({ isScrolled }) => {
 
 
   ];
-
   const navigate = useNavigate();
-
-  const { signOut } = useContext(AuthContext)
-
-  const handleSignOut = () => {
-    console.log("Até a próxima!");
-    signOut()
+  const SignOut = () => {
+    signOutContext();
+    //console.log("Até a próxima!");
+    localStorage.removeItem("token");
     navigate('/login');
   };
 
@@ -43,9 +43,23 @@ const TopNav = ({ isScrolled }) => {
     }
   };
 
+  const handleLogoutClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    if (token) {
+      dispatch(getMe(token));
+    }
+  }, [token, dispatch]);
+
   return (
     <NavContainer>
-      <nav className={`${isScrolled ? "scrolled" : "notScroll"}`}>
+      <nav className={`${isScrolled ? "scrolled" : "notScrolled"}`}>
         <div className="leftSide">
           <div className="logo">
             <img
@@ -75,136 +89,160 @@ const TopNav = ({ isScrolled }) => {
         </div>
 
         <div className="rightSide">
-          <button onClick={handleSignOut}>
+          <button onClick={handleLogoutClick}>
             <AiOutlineLogout />
           </button>
         </div>
       </nav>
+
+      {isModalOpen && (
+        <ModalOverlay>
+          <ModalContent>
+            <h2>User Information</h2>
+            {user ? (
+              <>
+                <p><strong>Name:</strong> {user.name}</p>
+                <p><strong>Email:</strong> {user.email}</p>
+                <button onClick={SignOut}>Logout</button>
+                <button onClick={handleCloseModal}>Close</button>
+              </>
+            ) : (
+              <p>Loading...</p>
+            )}
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </NavContainer>
   );
 };
 
 const NavContainer = styled.div`
-  .notScroll {
-    display: flex;
-  }
-  .scrolled {
-    display: flex;
-    background-color: black;
-  }
   nav {
-    position: sticky;
-    top: 0;
-    height: 6rem;
-    width: 100%;
+    display: flex;
     justify-content: space-between;
-    position: fixed;
-    z-index: 2;
-    padding: 0.4rem;
     align-items: center;
-    transition: 0.3s ease-in;
-    
-    .leftSide {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      margin-left: 5rem;
+    padding: 1rem 2rem;
+    background-color: #141414;
 
-      .logo {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+    &.scrolled {
+      background-color: #000;
+    }
+  }
 
+  .leftSide {
+    display: flex;
+    align-items: center;
+
+    .logo {
       img {
-        width: 10rem;
-        height: 2rem;
+        height: 50px;
       }
     }
 
     .links {
+      list-style: none;
       display: flex;
-      list-style-type: none;
-      gap: 3rem;
-      
+      gap: 1rem;
+      margin-left: 2rem;
+
       li {
         a {
           color: white;
           text-decoration: none;
+          font-size: 1rem;
         }
       }
     }
+  }
 
-    .middleSide {
-      flex-grow: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+  .middleSide {
+    display: flex;
+    align-items: center;
 
-      input {
-        width: 50%;
-        padding: 0.5rem;
-        border: none;
-        border-radius: 4px;
-        font-size: 1rem;
-        margin-right: 0.5rem;
-      }
+    input {
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: none;
+      margin-right: 0.5rem;
+    }
 
-      button {
-        background: none;
-        border: none;
-        cursor: pointer;
+    button {
+      padding: 0.5rem;
+      border: none;
+      border-radius: 4px;
+      background-color: #e50914;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1rem;
 
-        svg {
-          color: white;
-          font-size: 1.5rem;
-        }
+      &:hover {
+        background-color: #f6121d;
       }
     }
   }
 
   .rightSide {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-right: 1rem;
-
     button {
-      background-color: red;
+      padding: 0.5rem;
       border: none;
+      border-radius: 4px;
+      background-color: #e50914;
+      color: #fff;
       cursor: pointer;
-      border-radius: 50%;
-    }
+      font-size: 1rem;
 
-    &:focus {
-      outline: none;
-    }
-
-    svg {
-      color: white;
-      font-size: 2rem;
+      &:hover {
+        background-color: #f6121d;
+      }
     }
   }
+`;
 
-  .search-results {
-    position: absolute;
-    top: 6rem;
-    width: 100%;
-    background-color: black;
-    color: white;
-    padding: 1rem;
-    
-    .movie-item {
-      margin-bottom: 1rem;
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
 
-      h2 {
-        margin: 0;
-        font-size: 1.5rem;
-      }
+const ModalContent = styled.div`
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 300px;
 
-      p {
-        margin: 0.5rem 0 0;
-      }
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+    color: #555;
+  }
+
+  button {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #e50914;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+
+    &:hover {
+      background-color: #f6121d;
     }
   }
 `;

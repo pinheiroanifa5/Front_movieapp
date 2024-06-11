@@ -6,7 +6,7 @@ const initialState = {
     myinfo: {}
 };
 
-const usersSlice = createSlice({
+const UsersSlice = createSlice({
     name: "Users",
     initialState,
     reducers: {
@@ -16,7 +16,7 @@ const usersSlice = createSlice({
     },
 });
 
-export default usersSlice.reducer;
+export default UsersSlice.reducer;
 
 
 export const getMe = (token) => {
@@ -27,7 +27,7 @@ export const getMe = (token) => {
                     Authorization: `Bearer ${token}`
                 }
             })
-            dispatch(usersSlice.actions.getMe(response.data))
+            dispatch(UsersSlice.actions.getMe(response.data))
         } catch (error) {
             if (error.response) {
                 const { message: errorMessage } = error.response.data
