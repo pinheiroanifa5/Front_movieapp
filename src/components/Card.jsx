@@ -2,16 +2,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { IoPlayCircleSharp } from "react-icons/io5";
-import { AiOutlinePlus } from "react-icons/ai";
-import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
-import { BiChevronDown } from "react-icons/bi";
-import { BsCheck } from "react-icons/bs";
+import { AiOutlinePlus, AiOutlineEdit } from "react-icons/ai";
 import ReactPlayer from 'react-player/youtube';
+import { BiChevronDown } from "react-icons/bi";
 
 export default React.memo(function Card({ movieData }) {
   const [onHovered, setOnHovered] = useState(false);
   const navigate = useNavigate();
-
 
   return (
     <CardContainer
@@ -27,33 +24,29 @@ export default React.memo(function Card({ movieData }) {
       />
       {onHovered && (
         <div className="hover">
-          <div className="image-video-wrapper">
-            <ReactPlayer url={movieData.trailer} playing={true} />
-          </div>
           <div className="info-container">
             <h3 className="movieName" onClick={() => navigate("/player")}>
               {movieData.name}
             </h3>
+            <div className="category">
+              {movieData.category}
+            </div>
             <div className="icons">
               <div className="controls">
                 <IoPlayCircleSharp
-                  title="play"
+                  title="Play Movie"
                   onClick={() => navigate("/player")}
                 />
-                <RiThumbUpFill title="like" />
-                <RiThumbDownFill title="Dis like" />
-                <BsCheck title="Remove from  List" />
-                <AiOutlinePlus title="Add to my List" />
+                <AiOutlinePlus title="Add to My List" />
+                <AiOutlineEdit title="Edit" />
               </div>
               <div className="info">
                 <BiChevronDown title="More Info" />
               </div>
             </div>
-            <div className="genres">
-              <ul>
-                {movieData.category}
-              </ul>
-            </div>
+          </div>
+          <div className="creator-info">
+            {"Adicionado por: " + movieData.creator.name}
           </div>
         </div>
       )}
@@ -63,24 +56,22 @@ export default React.memo(function Card({ movieData }) {
 
 const CardContainer = styled.div`
   margin-top: 1rem;
-  max-width: 230px;
+  max-width: 250px;
   width: 230px;
   height: 100%;
   cursor: pointer;
   position: relative;
-
 
   img {
     border-radius: 0.2rem;
     width: 100%;
     height: 100%;
     z-index: 10;
-
   }
   .hover {
     z-index: 99;
-    height: max-content;
-    width: 20rem;
+    height: 55%;
+    width: 25rem;
     position: absolute;
     top: -18vh;
     left: 0;
@@ -100,15 +91,7 @@ const CardContainer = styled.div`
         z-index: 4;
         position: absolute;
       }
-      video {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 0.3rem;
-        top: 0;
-        z-index: 4;
-        position: absolute;
-      }
+      
     }
     .info-container {
       display: flex;
@@ -116,7 +99,11 @@ const CardContainer = styled.div`
       padding: 1rem;
       gap: 0.5rem;
       .movieName {
-        color: #8a4646;
+        color: white;
+      }
+      .category {
+        color: #f3f3f3;
+        font-size: 0.9rem;
       }
     }
     .icons {
@@ -135,23 +122,17 @@ const CardContainer = styled.div`
         cursor: pointer;
         transition: 0.3s ease-in-out;
         &:hover {
-          color: #522222;
+          color: #d72d2d;
         }
       }
     }
-    .genres {
-      display: flex;
-      color: #f3f3f3;
-      ul {
-        display: flex;
-        gap: 1rem;
-        li {
-          padding-right: 0.7rem;
-          &:first-of-type {
-            list-style-type: none;
-          }
-        }
-      }
+    .creator-info {
+      color: white;
+      text-align: right;
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      font-size: 0.8rem;
     }
   }
 `;

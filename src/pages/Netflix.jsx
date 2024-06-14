@@ -9,7 +9,9 @@ import TopNav from "../components/TopNav";
 import SliderContainer from "../components/SliderContainer";
 import { getAllMovies } from "../store/reducers/NetflixSlice";
 import { getMe } from "../store/reducers/UsersSlice";
-import ReactPlayer from "react-player";
+import ReactPlayer from 'react-player/youtube';
+
+
 
 const Netflix = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -18,7 +20,11 @@ const Netflix = () => {
   const movies = useSelector((state) => state.netflix.movies);
   const dispatch = useDispatch();
 
+
+
   const token = localStorage.getItem("token");
+
+
 
   useEffect(() => {
     if (token) {
@@ -39,11 +45,11 @@ const Netflix = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 500,
+    speed: 150,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 5000,
+    autoplaySpeed: 65000,
   };
 
   return (
@@ -53,7 +59,7 @@ const Netflix = () => {
         <Slider {...settings}>
           {movies.map((movie, index) => (
             <div key={index} className="slide">
-              < ReactPlayer url={movies[Math.floor(Math.random() * movies.length)].trailer} playing={true} width="100%" />
+              <ReactPlayer url={movies[Math.floor(Math.random() * movies.length)].trailer} playing={true} width="100%" controls={false} />
               <div className="container">
                 <div className="title">
                   <h1>{movie.title}</h1>
