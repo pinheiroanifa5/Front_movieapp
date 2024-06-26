@@ -3,12 +3,25 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { IoPlayCircleSharp } from "react-icons/io5";
 import { AiOutlinePlus, AiOutlineEdit } from "react-icons/ai";
-import ReactPlayer from 'react-player/youtube';
 import { BiChevronDown } from "react-icons/bi";
+import { useSelector } from "react-redux";
 
 export default React.memo(function Card({ movieData }) {
   const [onHovered, setOnHovered] = useState(false);
   const navigate = useNavigate();
+
+  const handleAddToList = () => {
+    // Add movie
+    alert("Filme adicionado à sua lista!");
+  };
+
+  const handleEdit = () => {
+    // Redirecionar para a página de edição
+    navigate(`/EditMovie/${movieData.id}`, { state: { movieData } });
+
+  };
+
+  const { myinfo } = useSelector((state) => state.users)
 
   return (
     <CardContainer
@@ -37,8 +50,11 @@ export default React.memo(function Card({ movieData }) {
                   title="Play Movie"
                   onClick={() => navigate("/player")}
                 />
-                <AiOutlinePlus title="Add to My List" />
-                <AiOutlineEdit title="Edit" />
+                <AiOutlinePlus title="Add to My List" onClick={handleAddToList} />
+                {myinfo.id === movieData.creator.id && (
+
+                  <AiOutlineEdit title="Edit" onClick={handleEdit} />
+                )}
               </div>
               <div className="info">
                 <BiChevronDown title="More Info" />
@@ -91,7 +107,6 @@ const CardContainer = styled.div`
         z-index: 4;
         position: absolute;
       }
-      
     }
     .info-container {
       display: flex;

@@ -61,10 +61,7 @@ const Netflix = () => {
             <div key={index} className="slide">
               <ReactPlayer url={movies[Math.floor(Math.random() * movies.length)].trailer} playing={true} width="100%" controls={false} />
               <div className="container">
-                <div className="title">
-                  <h1>{movie.title}</h1>
-                  <p>{movie.description}</p>
-                </div>
+
                 <div className="buttons">
                   <button onClick={() => navigate("/player")} className="playBtn">
                     Play

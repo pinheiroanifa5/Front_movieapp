@@ -22,7 +22,14 @@ const NetflixSlice = createSlice({
         addNewMovie: (state, action) => {
             const newMovie = action.payload
             state.movies = [...state.movies, newMovie]
+        },
+        editMovie: (state, action) => {
+            const editedMovie = action.payload
+            state.movies = state.movies.map((movie) => {
+                return movie.id === editedMovie.id ? editedMovie : movie
+            })
         }
+
     },
 });
 
@@ -65,6 +72,27 @@ export const addMovie = (token, data, setMessage, setErrorDetails) => {
                 setMessage('An error occurred. Please try again.');
                 setErrorDetails(errorMessage);
                 console.log({ errorMessage, statusCode })
+            }
+            return false
+        }
+    }
+}
+
+export const editMovie = (token, movie) => {
+    return async (dispatch) => {
+        try {
+            const response = await api.patch(`movies/${movie.id}`, movie, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            dispatch(NetflixSlice.actions.editMovie(response.data))
+
+            return true
+
+        } catch (error) {
+
+            if (error.response) {
+                const { message: errorMessage } = error.response.data
+                alert(errorMessage)
             }
             return false
         }
