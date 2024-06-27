@@ -4,15 +4,18 @@ import styled from "styled-components";
 import { IoPlayCircleSharp } from "react-icons/io5";
 import { AiOutlinePlus, AiOutlineEdit } from "react-icons/ai";
 import { BiChevronDown } from "react-icons/bi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addToMyList } from "../store/reducers/NetflixSlice";
 
 export default React.memo(function Card({ movieData }) {
   const [onHovered, setOnHovered] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleAddToList = () => {
-    // Add movie
+    dispatch(addToMyList(movieData));
     alert("Filme adicionado à sua lista!");
+
   };
 
   const handleEdit = () => {
@@ -119,6 +122,7 @@ const CardContainer = styled.div`
       .category {
         color: #f3f3f3;
         font-size: 0.9rem;
+        ;
       }
     }
     .icons {

@@ -8,6 +8,7 @@ export const api = axios.create({
 const initialState = {
     movies: [],
     generesLoaded: false,
+    myList: [],  //film de usuarios fav
     genres: [],
 };
 
@@ -28,6 +29,13 @@ const NetflixSlice = createSlice({
             state.movies = state.movies.map((movie) => {
                 return movie.id === editedMovie.id ? editedMovie : movie
             })
+        },
+        addToMyList: (state, action) => {
+            state.myList = [...state.myList, action.payload]
+
+        },
+        removeFromList: (state, action) => {
+            state.myList = state.myList.filter(movie => movie.id !== action.payload.id);
         }
 
     },
@@ -99,5 +107,29 @@ export const editMovie = (token, movie) => {
     }
 }
 
+export const addToMyList = (movie) => {
+    return async (dispatch) => {
+        try {
 
+            dispatch(NetflixSlice.actions.addToMyList(movie));
+            console.log({ movie })
+            return true;
+        } catch (error) {
+            console.error("Error adding movie to My List:", error);
+            return false;
+        }
+    }
+}
+export const removeFromMyList = (movie) => {
+    return async (dispatch) => {
+        try {
+
+            dispatch(NetflixSlice.actions.removeFromMyList(movie));
+            return true;
+        } catch (error) {
+            console.error("Error removing movie from My List:", error);
+            return false;
+        }
+    }
+}
 export default NetflixSlice.reducer

@@ -16,8 +16,8 @@ const TopNav = ({ isScrolled }) => {
   const { signOut: signOutContext } = useContext(AuthContext);
 
   const navlinks = [
-    { name: "Home", link: "/" },
-    { name: "Movies", link: "/movies" },
+
+
     { name: "AddMovie", link: "/AddMovie" },
     { name: "My List", link: "/mylist" },
 
@@ -26,7 +26,7 @@ const TopNav = ({ isScrolled }) => {
   const navigate = useNavigate();
   const SignOut = () => {
     signOutContext();
-    //console.log("Até a próxima!");
+
     localStorage.removeItem("token");
     navigate('/login');
   };

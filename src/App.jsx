@@ -10,6 +10,7 @@ import MoviePage from './pages/MoviePage';
 import Header from './components/Header';
 import { useEffect, useMemo, useReducer } from 'react';
 import { AuthContext } from './components/Context';
+import MyList from './pages/MyList';
 
 function App() {
 
@@ -83,6 +84,7 @@ function App() {
           <Route exact path='/login' element={<LoginPage />} />
           <Route exact path='/signup' element={<SignUpPage />} />
           <Route exact path='/EditMovie/:id' element={<EditMovie />} />
+          <Route path="/mylist" element={<MyList />} />
         </Routes>
         <Header />
       </BrowserRouter>
