@@ -14,16 +14,17 @@ const TopNav = ({ isScrolled }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.myinfo);
   const { signOut: signOutContext } = useContext(AuthContext);
+  const admin = user.role === "ADMIN"
+
 
   const navlinks = [
-
-
     { name: "AddMovie", link: "/AddMovie" },
     { name: "My List", link: "/mylist" },
-
-
+    admin && { name: "AdminPage", link: "/adminPage" }
   ];
+
   const navigate = useNavigate();
+
   const SignOut = () => {
     signOutContext();
     dispatch(resetMyList())
@@ -47,6 +48,10 @@ const TopNav = ({ isScrolled }) => {
   const handleLogoutClick = () => {
     setIsModalOpen(true);
   };
+  const handleLogoutclick = () => {
+    setIsModalOpen(true)
+  };
+
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -69,11 +74,14 @@ const TopNav = ({ isScrolled }) => {
             />
           </div>
           <ul className="links">
-            {navlinks.map(({ name, link }) => (
-              <li key={name}>
-                <Link to={link}>{name}</Link>
-              </li>
-            ))}
+            {navlinks.map(({ name, link }) => {
+              return (
+                <li key={name}>
+
+                  <Link to={link}>{name}</Link>
+                </li>
+              )
+            })}
           </ul>
         </div>
 

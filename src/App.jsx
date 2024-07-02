@@ -11,6 +11,8 @@ import Header from './components/Header';
 import { useEffect, useMemo, useReducer } from 'react';
 import { AuthContext } from './components/Context';
 import MyList from './pages/MyList';
+import AdminPage from './pages/AdminPage';
+
 
 function App() {
 
@@ -85,6 +87,7 @@ function App() {
           <Route exact path='/signup' element={<SignUpPage />} />
           <Route exact path='/EditMovie/:id' element={<EditMovie />} />
           <Route path="/mylist" element={<MyList />} />
+          <Route path='/adminPage' element={<AdminPage />} />
         </Routes>
         <Header />
       </BrowserRouter>

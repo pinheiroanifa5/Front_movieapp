@@ -10,6 +10,7 @@ const initialState = {
     generesLoaded: false,
     myList: [],  //film de usuarios fav
     genres: [],
+    users: [],
 };
 
 const NetflixSlice = createSlice({
@@ -45,6 +46,9 @@ const NetflixSlice = createSlice({
         }
 
     },
+    getAllUsers: (state, action) => {
+        state.users = action.payload
+    }
 });
 
 
