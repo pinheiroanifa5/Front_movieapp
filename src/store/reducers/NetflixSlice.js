@@ -34,12 +34,19 @@ const NetflixSlice = createSlice({
             state.myList = [...state.myList, action.payload]
 
         },
-        removeFromList: (state, action) => {
-            state.myList = state.myList.filter(movie => movie.id !== action.payload.id);
+        removeFromMyList: (state, action) => {
+            state.myList = state.myList.filter(movie => movie.id !== action.payload);
+        },
+        getAllMyListMovies: (state, action) => {
+            state.myList = action.payload
+        },
+        resetMyList: (state, action) => {
+            state.myList = action.payload
         }
 
     },
 });
+
 
 export const getAllMovies = (token, name = "") => {
     return async (dispatch) => {
@@ -107,9 +114,14 @@ export const editMovie = (token, movie) => {
     }
 }
 
-export const addToMyList = (movie) => {
+export const addToMyList = (token, movie) => {
     return async (dispatch) => {
         try {
+            await api.post(`movies/myList/${movie.id}`, movie, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
 
             dispatch(NetflixSlice.actions.addToMyList(movie));
             console.log({ movie })
@@ -120,16 +132,44 @@ export const addToMyList = (movie) => {
         }
     }
 }
-export const removeFromMyList = (movie) => {
+export const removeFromMyList = (movieId, token) => {
     return async (dispatch) => {
         try {
 
-            dispatch(NetflixSlice.actions.removeFromMyList(movie));
+            await api.delete(`movies/myList/${movieId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            dispatch(NetflixSlice.actions.removeFromMyList(movieId));
             return true;
         } catch (error) {
             console.error("Error removing movie from My List:", error);
             return false;
         }
+    }
+
+
+}
+export const getAllMyListMovies = (token) => {
+    return async (dispatch) => {
+        try {
+            const response = await api.get('movies/myList/me', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            dispatch(NetflixSlice.actions.getAllMyListMovies(response.data))
+        } catch (error) {
+
+        }
+    }
+}
+
+export const resetMyList = () => {
+    return async (dispatch) => {
+        dispatch(NetflixSlice.actions.resetMyList([]))
     }
 }
 export default NetflixSlice.reducer

@@ -1,46 +1,52 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { removeFromMyList } from '../store/reducers/NetflixSlice';
+import { getAllMyListMovies, removeFromMyList } from '../store/reducers/NetflixSlice';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 
 const MyList = () => {
-    const dispatch = useDispatch();
-    const myList = useSelector((state) => state.netflix.myList);
+  const dispatch = useDispatch();
+  const myList = useSelector((state) => state.netflix.myList);
+  const token = localStorage.getItem("token")
 
-    const handleRemoveFromList = (movieId) => {
-        dispatch(removeFromMyList(movieId));
-    };
+  const handleRemoveFromList = (movieId) => {
+    dispatch(removeFromMyList(movieId, token)).then((sucess) => {
+      if (sucess) alert("Movie was removed!");
+    });
+  };
 
-    return (
-        <MyListContainer>
-            <TopBar>
-                <Link to="/" className="back-link">
-                    <AiOutlineArrowLeft /> Voltar
-                </Link>
-            </TopBar>
-            <MyListContent>
-                <h2>Minha Lista</h2>
-                <MoviesGrid>
-                    {myList.length > 0 ? (
-                        myList.map((movie) => (
-                            <MovieCard key={movie.id}>
-                                <img src={movie.image} alt={movie.title} />
-                                <MovieInfo>
-                                    <h3>{movie.title}</h3>
-                                    <p>{movie.description}</p>
-                                    <Button onClick={() => handleRemoveFromList(movie.id)}>Remover</Button>
-                                </MovieInfo>
-                            </MovieCard>
-                        ))
-                    ) : (
-                        <p>Nenhum filme adicionado à sua lista ainda.</p>
-                    )}
-                </MoviesGrid>
-            </MyListContent>
-        </MyListContainer>
-    );
+  useEffect(() => {
+    dispatch(getAllMyListMovies(token))
+  }, [token])
+  return (
+    <MyListContainer>
+      <TopBar>
+        <Link to="/" className="back-link">
+          <AiOutlineArrowLeft /> Voltar
+        </Link>
+      </TopBar>
+      <MyListContent>
+        <h2>Minha Lista</h2>
+        <MoviesGrid>
+          {myList.length > 0 ? (
+            myList.map((movie) => (
+              <MovieCard key={movie.id}>
+                <img src={movie.image} alt={movie.title} />
+                <MovieInfo>
+                  <h3>{movie.title}</h3>
+                  <p>{movie.description}</p>
+                  <Button onClick={() => handleRemoveFromList(movie.id)}>Remover</Button>
+                </MovieInfo>
+              </MovieCard>
+            ))
+          ) : (
+            <p>Nenhum filme adicionado à sua lista ainda.</p>
+          )}
+        </MoviesGrid>
+      </MyListContent>
+    </MyListContainer>
+  );
 };
 
 const MyListContainer = styled.div`

@@ -11,11 +11,12 @@ export default React.memo(function Card({ movieData }) {
   const [onHovered, setOnHovered] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const token = localStorage.getItem("token")
 
-  const handleAddToList = () => {
-    dispatch(addToMyList(movieData));
-    alert("Filme adicionado à sua lista!");
-
+  const handleAddToList = (movie) => {
+    dispatch(addToMyList(token, movie)).then((success) => {
+      if (success) alert("Filme adicionado à sua lista!");
+    });
   };
 
   const handleEdit = () => {
@@ -53,7 +54,7 @@ export default React.memo(function Card({ movieData }) {
                   title="Play Movie"
                   onClick={() => navigate("/player")}
                 />
-                <AiOutlinePlus title="Add to My List" onClick={handleAddToList} />
+                <AiOutlinePlus title="Add to My List" onClick={() => handleAddToList(movieData)} />
                 {myinfo.id === movieData.creator.id && (
 
                   <AiOutlineEdit title="Edit" onClick={handleEdit} />

@@ -3,7 +3,7 @@ import { AiOutlineLogout, AiOutlineSearch } from "react-icons/ai";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllMovies } from "../store/reducers/NetflixSlice";
+import { getAllMovies, resetMyList } from "../store/reducers/NetflixSlice";
 import { getMe } from "../store/reducers/UsersSlice";
 import { AuthContext } from "./Context";
 
@@ -26,6 +26,7 @@ const TopNav = ({ isScrolled }) => {
   const navigate = useNavigate();
   const SignOut = () => {
     signOutContext();
+    dispatch(resetMyList())
 
     localStorage.removeItem("token");
     navigate('/login');
