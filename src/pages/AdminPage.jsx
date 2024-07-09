@@ -1,8 +1,17 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllUsers } from '../store/reducers/UsersSlice';
 import { useNavigate } from 'react-router-dom';
+=======
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+import AddMovie from './AddMovie';
+import MyList from './MyList';
+import TopNav from '../components/TopNav';
+>>>>>>> 42147da03cc463f2960f11426af4f5ec535bbae9
 
 const AdminPage = () => {
     const [loading, setLoading] = useState(true);
@@ -25,6 +34,7 @@ const AdminPage = () => {
     }
 
     return (
+<<<<<<< HEAD
         <Container>
             <h1>Registered Users</h1>
             <UserList>
@@ -38,6 +48,15 @@ const AdminPage = () => {
                 ))}
             </UserList>
         </Container>
+=======
+        <Router>
+            <TopNav />
+            <Routes>
+                <Route path="/admin/add-movie" element={<AddMovie />} />
+                <Route path="/admin/my-list" element={<MyList />} />
+            </Routes>
+        </Router>
+>>>>>>> 42147da03cc463f2960f11426af4f5ec535bbae9
     );
 };
 
@@ -58,3 +77,4 @@ const UserItem = styled.div`
 `;
 
 export default AdminPage;
+
