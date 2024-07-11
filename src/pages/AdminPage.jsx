@@ -9,8 +9,7 @@ const AdminPage = () => {
     const [loading, setLoading] = useState(true);
     const dispatch = useDispatch();
     const users = useSelector((state) => state.users.users);
-    const token = localStorage.getItem("token"); // Certifique-se de que o token está sendo armazenado no estado auth
-
+    const token = localStorage.getItem("token");
     useEffect(() => {
         if (token) {
             const loadUsers = async () => {

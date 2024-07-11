@@ -84,7 +84,7 @@ const SignUpPage = () => {
                 setShowName(false)
               }}>Next</button>
             ) : (
-              <button onClick={handleSignUp}>Sign Out</button>
+              <button onClick={handleSignUp}>Sign in</button>
             )
             }
 
